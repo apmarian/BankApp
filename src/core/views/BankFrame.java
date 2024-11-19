@@ -4,12 +4,13 @@
  */
 package core.views;
 
+
 import core.controller.utils.Response;
 import core.controllers.AccountController;
-import core.models.Account;
-import core.models.Transaction;
-import core.models.TransactionType;
 import core.models.User;
+import core.models.Transaction;
+import core.models.Account;
+import core.models.TransactionType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;

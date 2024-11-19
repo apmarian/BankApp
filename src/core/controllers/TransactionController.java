@@ -4,10 +4,7 @@
  */
 package core.controllers;
 
-/**
- *
- * @author maria
- */
 public class TransactionController {
+
     
 }

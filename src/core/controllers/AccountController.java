@@ -4,6 +4,7 @@
  */
 package core.controllers;
 
+
 import core.controller.utils.Response;
 import core.controller.utils.Status;
 import core.models.Account;
@@ -92,6 +93,4 @@ public class AccountController {
         }
 
     }
-
-
 }

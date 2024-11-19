@@ -4,10 +4,6 @@
  */
 package core.controller.utils;
 
-/**
- *
- * @author maria
- */
 public class Response {
 
     private String message;

@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package core.controllers;
 
 import core.controller.utils.Response;
@@ -9,12 +6,9 @@ import core.controller.utils.Status;
 import core.models.User;
 import java.util.ArrayList;
 
-/**
- *
- * @author maria
- */
-public class UserController {
 
+public class UserController {
+    
     private static ArrayList<User> users = new ArrayList<>();
 
     public static Response registerUser(String id, String firstname, String lastname, String age) {
@@ -45,6 +39,11 @@ public class UserController {
                 return new Response("Firstname must be not empty", Status.BAD_REQUEST);     // verifico si la caja de first name no este vacia
             }
 
+            
+            if (firstname.equals("")) {
+                return new Response("Firstname must be not empty", Status.BAD_REQUEST);     // verifico si la caja de first name no este vacia
+            }
+            
             if (lastname.equals("")) {
                 return new Response("Lastname must be not empty", Status.BAD_REQUEST);      // verifico si  la caja de last name no este vacia
             }
