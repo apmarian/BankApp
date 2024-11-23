@@ -5,6 +5,7 @@
 package core.models.storage.utils;
 
 import core.models.Account;
+import core.models.storage.AccountStorage;
 import java.util.ArrayList;
 
 /**
@@ -13,9 +14,13 @@ import java.util.ArrayList;
  */
 public class AccountUtils {
 
-    private static ArrayList<Account> accounts;
-
     public static ArrayList<Account> accountOrderbyId() {
+
+        AccountStorage accountStorage = AccountStorage.getInstance();
+        ArrayList<Account> accounts = accountStorage.getAccounts();
+        if (accounts == null) {
+            accounts = new ArrayList<>();
+        }
         accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
         return accounts;
     }

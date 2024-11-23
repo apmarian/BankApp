@@ -13,7 +13,12 @@ import core.models.Account;
 public class WithdrawTransaction implements TransactionStrategy {
 
     @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.DEPOSIT;  
+    }
+
+    @Override
     public void execute(Account sourceAccount, Account destinationAccount, double amount) {
-        sourceAccount.withdraw(amount);  // Restar dinero de la cuenta fuente
+        sourceAccount.withdraw(amount);  
     }
 }

@@ -36,7 +36,8 @@ public class ListTransactionsController {
             }
 
         } catch (Exception ex) {
-            return new Response("Unexpected error.", Status.INTERNAL_SERVER_ERROR);
+            ex.printStackTrace();  // Para imprimir el error completo en consola.
+            return new Response("Unexpected error: " + ex.getMessage(), Status.INTERNAL_SERVER_ERROR);
         }
     }
 

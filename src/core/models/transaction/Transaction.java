@@ -12,23 +12,28 @@ import java.util.Collections;
  *
  * @author edangulo
  */
-public  class Transaction {
+public class Transaction {
 
     private TransactionType type;
     private Account sourceAccount;
     private Account destinationAccount;
     private double amount;
-    private TransactionStrategy strategy; 
+    private TransactionStrategy strategy;
 
     public Transaction(TransactionStrategy strategy, Account sourceAccount, Account destinationAccount, double amount) {
         this.sourceAccount = sourceAccount;
         this.destinationAccount = destinationAccount;
         this.amount = amount;
-        this.strategy= strategy; 
+        this.strategy = strategy;
+        this.type = strategy.getTransactionType();
     }
 
     public TransactionType getType() {
         return type;
+    }
+
+    public TransactionStrategy getStrategy() {
+        return strategy;
     }
 
     public Account getSourceAccount() {
@@ -41,10 +46,6 @@ public  class Transaction {
 
     public double getAmount() {
         return amount;
-    }
-
-    public TransactionStrategy getStrategy() {
-        return strategy;
     }
 
 }

@@ -14,4 +14,5 @@ public interface TransactionStrategy {
 
     void execute(Account sourceAccount, Account destinationAccount, double amount);
 
+    TransactionType getTransactionType();
 }

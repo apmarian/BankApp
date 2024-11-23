@@ -13,8 +13,13 @@ import core.models.Account;
 public class TransferTransaction implements TransactionStrategy {
 
     @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.DEPOSIT;  // O el valor adecuado para este tipo de transacción
+    }
+
+    @Override
     public void execute(Account sourceAccount, Account destinationAccount, double amount) {
-        sourceAccount.deposit(amount);  
-        destinationAccount.withdraw(amount); 
+        sourceAccount.deposit(amount);
+        destinationAccount.withdraw(amount);
     }
 }

@@ -36,7 +36,7 @@ public class ListAccountsController {
             }
 
         } catch (Exception ex) {
-            return new Response("Unexpected error.", Status.INTERNAL_SERVER_ERROR);
+            return new Response("Unexpected error." , Status.INTERNAL_SERVER_ERROR);
         }
     }
 }
