@@ -45,11 +45,7 @@ public class TransactionController {
             }
             if (destinationAccount == null) {
                 return new Response("This destination account does not exist.", Status.BAD_REQUEST);
-            } else {
-                if (destinationAccount != null) {
-                    destinationAccount.deposit(moneyAmount);
-                }
-            }
+            } 
 
             Transaction transaction = new Transaction(new DepositTransaction(), null, destinationAccount, moneyAmount);
             transaction.getStrategy().execute(transaction.getSourceAccount(), transaction.getDestinationAccount(), transaction.getAmount());
