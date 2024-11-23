@@ -5,13 +5,14 @@
 package core.models;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  *
  * @author edangulo
  */
-public class User {
-    
+public class User implements UserInterface {
+
     private int id;
     private String firstname;
     private String lastname;
@@ -41,13 +42,14 @@ public class User {
     public int getAge() {
         return age;
     }
-    
+
     public int getNumAccounts() {
         return this.accounts.size();
     }
-    
+
+    @Override
     public void addAccount(Account account) {
         this.accounts.add(account);
     }
-    
+
 }

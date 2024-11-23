@@ -1,20 +1,24 @@
-
 package core.controllers;
 
 import core.controller.utils.Response;
 import core.controller.utils.Status;
 import core.models.User;
+import core.models.storage.Storage;
+import core.models.storage.UserStorage;
 import java.util.ArrayList;
 
-
 public class UserController {
-    
+
     private static ArrayList<User> users = new ArrayList<>();
 
     public static Response registerUser(String id, String firstname, String lastname, String age) {
         try {
 
+            UserStorage userStorage = UserStorage.getInstance();
+            ArrayList<User> users = userStorage.getUsers();
             int idInt;
+            int ageInt;
+
             try {
                 idInt = Integer.parseInt(id);       // convierto el id a un numero entero
             } catch (NumberFormatException ex) {
@@ -39,16 +43,14 @@ public class UserController {
                 return new Response("Firstname must be not empty", Status.BAD_REQUEST);     // verifico si la caja de first name no este vacia
             }
 
-            
             if (firstname.equals("")) {
                 return new Response("Firstname must be not empty", Status.BAD_REQUEST);     // verifico si la caja de first name no este vacia
             }
-            
+
             if (lastname.equals("")) {
                 return new Response("Lastname must be not empty", Status.BAD_REQUEST);      // verifico si  la caja de last name no este vacia
             }
 
-            int ageInt;
             try {
                 ageInt = Integer.parseInt(age);     // convierto la edad a un numero entero
             } catch (NumberFormatException ex) {
@@ -59,6 +61,7 @@ public class UserController {
                 return new Response("Age must be greater than or equal to 18.", Status.BAD_REQUEST);
             }
 
+            userStorage.addUser(new User(idInt, firstname, lastname, ageInt));
             return new Response("User registered successfully.", Status.OK);        // si todo es válido, lo retorna
 
         } catch (Exception ex) {

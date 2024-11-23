@@ -4,13 +4,18 @@
  */
 package core.views;
 
-
 import core.controller.utils.Response;
+import core.controller.utils.Status;
 import core.controllers.AccountController;
+import core.controllers.ListAccountsController;
+import core.controllers.ListTransactionsController;
+import core.controllers.ListUsersController;
+import core.controllers.TransactionController;
+import core.controllers.UserController;
 import core.models.User;
-import core.models.Transaction;
+import core.models.transaction.Transaction;
 import core.models.Account;
-import core.models.TransactionType;
+import core.models.transaction.TransactionType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -537,29 +542,34 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void registerUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerUserActionPerformed
         // TODO add your handling code here:
-        try {
-            int id = Integer.parseInt(IDTextField.getText());
-            String firstname = FirstNameTextField.getText();
-            String lastname = LastNameTextField.getText();
-            int age = Integer.parseInt(AgeTextField.getText());
 
-            this.users.add(new User(id, firstname, lastname, age));//cambiar, aqui deberia llamar al controlador 
+        String id = IDTextField.getText();
+        String firstname = FirstNameTextField.getText();
+        String lastname = LastNameTextField.getText();
+        String age = AgeTextField.getText();
 
-            IDTextField.setText("");
-            FirstNameTextField.setText("");
-            LastNameTextField.setText("");
-            AgeTextField.setText("");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+        Response response = UserController.registerUser(id, firstname, lastname, age);
+
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
+
+        IDTextField.setText("");
+        FirstNameTextField.setText("");
+        LastNameTextField.setText("");
+        AgeTextField.setText("");
     }//GEN-LAST:event_registerUserActionPerformed
 
     private void createAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAccountActionPerformed
         // TODO add your handling code here:
-        int userId = Integer.parseInt(userIDTextField.getText());
-        double initialBalance = Double.parseDouble(initialBalanceTextField.getText());
-        
-        Response response = AccountController.createAccount(String.valueOf(userId), String.valueOf(initialBalance));//hice strng value of para q no me salga error
+        String userId = userIDTextField.getText();
+        String initialBalance = initialBalanceTextField.getText();
+
+        Response response = AccountController.createAccount(userId, initialBalance);
 
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
@@ -575,123 +585,88 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void executeTransactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeTransactionActionPerformed
         // TODO add your handling code here:
-        try {
-            String type = TypeTransComboBox.getItemAt(TypeTransComboBox.getSelectedIndex());
-            switch (type) {
-                case "Deposit": {
-                    String destinationAccountId = destinationAccountTextField.getText();
-                    double amount = Double.parseDouble(AmountTextField.getText());
 
-                    Account destinationAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(destinationAccountId)) {
-                            destinationAccount = account;
-                        }
-                    }
-                    if (destinationAccount != null) {
-                        destinationAccount.deposit(amount);
+        String type = TypeTransComboBox.getItemAt(TypeTransComboBox.getSelectedIndex());
+        String sourceAccountId = sourceAccountTextField.getText();
+        String amount = AmountTextField.getText();
+        String destinationAccountId = destinationAccountTextField.getText();
+        Response response = new Response("", Status.INTERNAL_SERVER_ERROR);
 
-                        this.transactions.add(new Transaction(TransactionType.DEPOSIT, null, destinationAccount, amount));
-
-                        sourceAccountTextField.setText("");
-                        destinationAccountTextField.setText("");
-                        AmountTextField.setText("");
-                    }
-                    break;
-                }
-                case "Withdraw": {
-                    String sourceAccountId = sourceAccountTextField.getText();
-                    double amount = Double.parseDouble(AmountTextField.getText());
-
-                    Account sourceAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(sourceAccountId)) {
-                            sourceAccount = account;
-                        }
-                    }
-                    if (sourceAccount != null && sourceAccount.withdraw(amount)) {
-                        this.transactions.add(new Transaction(TransactionType.WITHDRAW, sourceAccount, null, amount));
-
-                        sourceAccountTextField.setText("");
-                        destinationAccountTextField.setText("");
-                        AmountTextField.setText("");
-                    }
-                    break;
-                }
-                case "Transfer": {
-                    String sourceAccountId = sourceAccountTextField.getText();
-                    String destinationAccountId = destinationAccountTextField.getText();
-                    double amount = Double.parseDouble(AmountTextField.getText());
-
-                    Account sourceAccount = null;
-                    Account destinationAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(sourceAccountId)) {
-                            sourceAccount = account;
-                        }
-                    }
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(destinationAccountId)) {
-                            destinationAccount = account;
-                        }
-                    }
-                    if (sourceAccount != null && destinationAccount != null && sourceAccount.withdraw(amount)) {
-                        destinationAccount.deposit(amount);
-
-                        this.transactions.add(new Transaction(TransactionType.TRANSFER, sourceAccount, destinationAccount, amount));
-
-                        sourceAccountTextField.setText("");
-                        destinationAccountTextField.setText("");
-                        AmountTextField.setText("");
-                    }
-                    break;
-                }
-                default: {
-                    sourceAccountTextField.setText("");
-                    destinationAccountTextField.setText("");
-                    AmountTextField.setText("");
-                    break;
-                }
+        switch (type) {
+            case "Deposit": {
+                response = TransactionController.deposit(amount, destinationAccountId);
+                break;
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+            case "Withdraw": {
+                response = TransactionController.withdraw(amount, sourceAccountId);
+                break;
+            }
+            case "Transfer": {
+                response = TransactionController.transfer(sourceAccountId, destinationAccountId, amount);
+                break;
+            }
+            default: {
+                sourceAccountTextField.setText("");
+                destinationAccountTextField.setText("");
+                AmountTextField.setText("");
+                break;
+            }
         }
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+        }
+        sourceAccountTextField.setText("");
+        destinationAccountTextField.setText("");
+        AmountTextField.setText("");
     }//GEN-LAST:event_executeTransactionActionPerformed
 
     private void refreshUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshUsersActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
 
-        this.users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
+        Response response = ListUsersController.refreshUserList(model);
 
-        for (User user : this.users) {
-            model.addRow(new Object[]{user.getId(), user.getFirstname() + " " + user.getLastname(), user.getAge(), user.getNumAccounts()});
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
+
     }//GEN-LAST:event_refreshUsersActionPerformed
 
     private void refreshAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshAccountsActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-        model.setRowCount(0);
 
-        this.accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
+        Response response = ListAccountsController.refreshAccountList(model);
 
-        for (Account account : this.accounts) {
-            model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_refreshAccountsActionPerformed
 
     private void refreshTransActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshTransActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-        model.setRowCount(0);
 
-        ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) this.transactions.clone();
-        Collections.reverse(transactionsCopy);
+        Response response = ListTransactionsController.refreshTransactionList(model);
 
-        for (Transaction transaction : transactionsCopy) {
-            model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount() != null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_refreshTransActionPerformed
 
@@ -706,7 +681,6 @@ public class BankFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField AgeTextField;

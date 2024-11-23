@@ -2,19 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package core.models.storage;
+package core.models.transaction;
 
 import core.models.Account;
-import core.models.transaction.Transaction;
-import core.models.User;
-import java.util.ArrayList;
 
 /**
  *
  * @author maria
  */
-public abstract class Storage {
+public class DepositTransaction implements TransactionStrategy {
 
-
-
+    @Override
+    public void execute(Account sourceAccount, Account destinationAccount, double amount) {
+        destinationAccount.deposit(amount); 
+    }
 }
