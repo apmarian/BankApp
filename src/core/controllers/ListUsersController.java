@@ -18,14 +18,13 @@ import javax.swing.table.DefaultTableModel;
 public class ListUsersController {
 
     public static Response refreshUserList(DefaultTableModel model) {
-        //acceder al storage de usuarios, ordenar la lista y cargarla 
+
         try {
             UserStorage userStorage = UserStorage.getInstance();
             ArrayList<User> users = userStorage.userOrderbyId();
 
             if (!users.isEmpty()) {
                 model.setRowCount(0);
-                //cargar tabla 
                 for (User user : users) {
                     model.addRow(new Object[]{user.getId(), user.getFirstname() + " " + user.getLastname(), user.getAge(), user.getNumAccounts()});
                 }

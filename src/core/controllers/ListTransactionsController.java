@@ -26,7 +26,6 @@ public class ListTransactionsController {
 
             if (!transactionsCopy.isEmpty()) {
                 model.setRowCount(0);
-                //cargar tabla 
                 for (Transaction transaction : transactionsCopy) {
                     model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount() != null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
                 }
@@ -36,8 +35,7 @@ public class ListTransactionsController {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();  // Para imprimir el error completo en consola.
-            return new Response("Unexpected error: " + ex.getMessage(), Status.INTERNAL_SERVER_ERROR);
+            return new Response("Unexpected error. ", Status.INTERNAL_SERVER_ERROR);
         }
     }
 

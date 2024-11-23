@@ -53,7 +53,7 @@ public class TransactionController {
 
             Transaction transaction = new Transaction(new DepositTransaction(), null, destinationAccount, moneyAmount);
             transaction.getStrategy().execute(transaction.getSourceAccount(), transaction.getDestinationAccount(), transaction.getAmount());
-            transactionStorage.executeTransaction(transaction); // Almacenar la transacción
+            transactionStorage.executeTransaction(transaction); 
             return new Response("Transaction completed.", Status.CREATED, transaction);
 
         } catch (Exception ex) {
@@ -86,7 +86,7 @@ public class TransactionController {
             }
 
             if (moneyAmount <= 0) {
-                return new Response("Amount must be greater than 0.", Status.BAD_REQUEST); // verifico que el valor sea mayor que cero y que haya suficeinte en la cuenta para transferir
+                return new Response("Amount must be greater than 0.", Status.BAD_REQUEST); 
             }
             if (moneyAmount > sourceAccount.getBalance()) {
                 return new Response("Insufficient funds.", Status.BAD_REQUEST);

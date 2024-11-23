@@ -26,7 +26,6 @@ public class ListAccountsController {
 
             if (!accounts.isEmpty()) {
                 model.setRowCount(0);
-                //cargar tabla 
                 for (Account account : accounts) {
                     model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
                 }

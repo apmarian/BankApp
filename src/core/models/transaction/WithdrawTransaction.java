@@ -14,7 +14,7 @@ public class WithdrawTransaction implements TransactionStrategy {
 
     @Override
     public TransactionType getTransactionType() {
-        return TransactionType.DEPOSIT;  
+        return TransactionType.WITHDRAW;  
     }
 
     @Override

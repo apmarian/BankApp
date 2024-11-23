@@ -62,7 +62,7 @@ public class AccountController {
             //validacion de que las cuentas solo se puedan crear para los usuarios previamente registrados en la plataforma.
             for (User user : users) {
                 if (user.getId() == userIdInt) {
-                    selectedUser = user;  // Usuario encontrado
+                    selectedUser = user;  
 
                 }
             }

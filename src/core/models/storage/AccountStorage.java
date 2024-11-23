@@ -25,7 +25,7 @@ public class AccountStorage extends Storage implements AccountStorageInterface{
     }
     
     private AccountStorage() {
-        accounts = new ArrayList<>();  // Aseguramos que accounts nunca sea null
+        accounts = new ArrayList<>(); 
     }
 
     public boolean createAccount(Account account) {

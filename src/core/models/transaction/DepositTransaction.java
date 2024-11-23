@@ -14,7 +14,7 @@ public class DepositTransaction implements TransactionStrategy {
 
     @Override
     public TransactionType getTransactionType() {
-        return TransactionType.DEPOSIT;  // O el valor adecuado para este tipo de transacción
+        return TransactionType.DEPOSIT; 
     }
 
     @Override
