@@ -19,6 +19,10 @@ public class UserController {
             int idInt;
             int ageInt;
 
+            if (id.length() > 9) {      // valido que el id no tenga más de 9 dígitos
+                return new Response("ID must not have more than 9 digits.", Status.BAD_REQUEST);
+            }
+
             try {
                 idInt = Integer.parseInt(id);       // convierto el id a un numero entero
             } catch (NumberFormatException ex) {
@@ -29,10 +33,6 @@ public class UserController {
                 if (user.getId() == idInt) {        // compruebo si el ID ya existe
                     return new Response("ID must be unique. This ID is already registered.", Status.BAD_REQUEST);
                 }
-            }
-
-            if (id.length() > 9) {      // valido que el id no tenga más de 9 dígitos
-                return new Response("ID must not have more than 9 digits.", Status.BAD_REQUEST);
             }
 
             if (idInt < 0) {        // valido que el id sea mayor o igual a 0
